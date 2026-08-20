@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>如果不当护士，你到底适合干嘛？——护理生转行方向测试</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --primary: #5b8def;
+    --primary-2: #a78bfa;
+    --ink: #2b2f3a;
+    --sub: #6b7280;
+    --bg: #eef2f9;
+    --card: #ffffff;
+    --radius: 20px;
+  }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: linear-gradient(160deg, #eef2f9 0%, #f7f3fc 100%);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+  }
+  .page { display: none; animation: fadeIn .35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- 卡片 ---------- */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: 0 8px 30px rgba(60, 80, 140, .08);
+    margin-bottom: 20px;
+  }
+
+  /* ---------- 开始页 ---------- */
+  .hero { text-align: center; padding-top: 20px; }
+  .hero .badge {
+    display: inline-block; background: rgba(91,141,239,.12); color: var(--primary);
+    font-size: 13px; padding: 6px 14px; border-radius: 999px; margin-bottom: 18px; font-weight: 600;
+  }
+  .hero h1 { font-size: clamp(28px, 6vw, 44px); line-height: 1.3; margin-bottom: 10px; }
+  .hero h1 .hl { background: linear-gradient(90deg, var(--primary), var(--primary-2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .hero .sub { color: var(--sub); font-size: clamp(15px, 3.4vw, 18px); margin-bottom: 26px; }
+  .intro-text { text-align: left; font-size: 15px; color: #444b5c; }
+  .intro-text p { margin-bottom: 12px; }
+  .intro-text .highlight { color: var(--primary); font-weight: 700; }
+  .intro-meta { background: #f6f8fd; border-radius: 14px; padding: 14px 18px; margin: 18px 0 6px; font-size: 14px; color: var(--sub); }
+  .intro-meta li { list-style: none; padding: 4px 0; }
+
+  /* ---------- 按钮 ---------- */
+  .btn {
+    display: block; width: 100%; padding: 16px; border: none; border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-2));
+    color: #fff; font-size: 17px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 10px 24px rgba(91,141,239,.3); transition: transform .15s ease, opacity .15s ease;
+  }
+  .btn:active { transform: scale(.97); opacity: .9; }
+  .btn.ghost {
+    background: #fff; color: var(--primary); border: 1.5px solid var(--primary);
+    box-shadow: none; margin-top: 12px;
+  }
+
+  /* ---------- 答题页 ---------- */
+  .quiz-top { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .quiz-top .progress-wrap { flex: 1; height: 8px; background: #e4e9f5; border-radius: 999px; overflow: hidden; }
+  .quiz-top .progress-bar { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary), var(--primary-2)); border-radius: 999px; transition: width .3s ease; }
+  .quiz-top .counter { font-size: 14px; color: var(--sub); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .quiz-card .q-index { font-size: 14px; color: var(--primary); font-weight: 700; margin-bottom: 8px; }
+  .quiz-card .q-text { font-size: clamp(18px, 4.4vw, 22px); font-weight: 700; line-height: 1.45; margin-bottom: 22px; }
+  .option {
+    display: block; width: 100%; text-align: left; background: #f7f9fe;
+    border: 2px solid transparent; border-radius: 14px; padding: 15px 18px; margin-bottom: 12px;
+    font-size: 15.5px; color: var(--ink); cursor: pointer; transition: all .18s ease;
+  }
+  .option:hover { border-color: var(--primary); background: #f0f5ff; }
+  .option.selected { border-color: var(--primary); background: #edf3ff; font-weight: 600; }
+  .quiz-actions { display: flex; gap: 12px; margin-top: 8px; }
+  .quiz-actions .btn { flex: 1; }
+  .btn.prev { background: #fff; color: var(--sub); border: 1.5px solid #dfe4f0; box-shadow: none; }
+
+  /* ---------- 结果页 ---------- */
+  .result-hero { text-align: center; padding-top: 16px; }
+  .result-hero .test-name { font-size: 13px; color: var(--sub); margin-bottom: 6px; }
+  .result-hero .type-name { font-size: clamp(30px, 7vw, 44px); font-weight: 800; }
+  .result-hero .match-wrap { position: relative; width: 132px; height: 132px; margin: 22px auto 8px; }
+  .result-hero .match-wrap svg { transform: rotate(-90deg); }
+  .result-hero .match-num { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .result-hero .match-num b { font-size: 30px; }
+  .result-hero .match-num span { font-size: 12px; color: var(--sub); }
+  .result-hero .tagline { font-size: 16px; color: var(--primary); font-weight: 600; margin-top: 8px; }
+
+  .sec-title { font-size: 16px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .sec-title::before { content: ""; width: 4px; height: 16px; border-radius: 4px; background: linear-gradient(180deg, var(--primary), var(--primary-2)); }
+  .analysis-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 620px) { .analysis-grid { grid-template-columns: 1fr 1fr; } }
+  .ana-item { background: #f7f9fe; border-radius: 14px; padding: 16px 18px; }
+  .ana-item .k { font-size: 13px; color: var(--sub); margin-bottom: 4px; }
+  .ana-item .v { font-size: 14.5px; }
+
+  .career-list { display: flex; flex-direction: column; gap: 12px; }
+  .career-item { display: flex; gap: 14px; align-items: flex-start; background: #f7f9fe; border-radius: 14px; padding: 16px 18px; }
+  .career-item .rank {
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 800; font-size: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  }
+  .career-item .rank.r2 { background: linear-gradient(135deg, #8fa3d8, #b8a8e8); }
+  .career-item .rank.r3 { background: linear-gradient(135deg, #a8b6d8, #cdc0ec); }
+  .career-item .c-name { font-weight: 700; font-size: 16px; }
+  .career-item .c-note { font-size: 13.5px; color: var(--sub); }
+
+  .timeline { position: relative; padding-left: 22px; }
+  .timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: #e4e9f5; }
+  .tl-item { position: relative; margin-bottom: 16px; }
+  .tl-item::before { content: ""; position: absolute; left: -21px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+  .tl-item .k { font-weight: 700; font-size: 15px; }
+  .tl-item .v { font-size: 14px; color: #444b5c; }
+  .ending { text-align: center; font-size: clamp(16px, 4vw, 19px); font-weight: 700; color: var(--primary); padding: 8px 0 2px; }
+  .result-actions { display: flex; gap: 12px; }
+  .result-actions .btn { flex: 1; }
+  .foot-note { text-align: center; font-size: 12px; color: #a4abc0; margin-top: 18px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 40px; transform: translateX(-50%) translateY(20px);
+    background: rgba(30,34,48,.88); color: #fff; font-size: 14px; padding: 12px 22px; border-radius: 999px;
+    opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 99;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ============ 开始页 ============ -->
+  <div class="page active" id="pageStart">
+    <div class="hero">
+      <div class="badge">护理生转行方向测试 · 人生实验室</div>
+      <h1>如果不当护士，<br><span class="hl">你到底适合干嘛？</span></h1>
+      <p class="sub">测测你离开护士站后，最适合走哪条路。</p>
+    </div>
+    <div class="card intro-text">
+      <p>你不是矫情，你只是累了。</p>
+      <p>护理这条路，你走得很认真：你熬过别人没熬过的夜，扛过别人没扛过的委屈，也见过凌晨三点的病房和清晨六点的走廊。但如果你现在开始问自己"我还能做什么"——那恭喜你，这不是逃跑，是觉醒。</p>
+      <p>这个测试不给你打分、不判对错，只想陪你想清楚一件事：<span class="highlight">除了护士站，你还适合哪里。</span></p>
+      <ul class="intro-meta">
+        <li>· 测试时长：约 2～3 分钟</li>
+        <li>· 共 14 道题，凭直觉选择即可</li>
+        <li>· 没有绝对标准答案，你的第一反应就是答案</li>
+        <li>· 提交后自动生成专属结果，可一键保存为分享图</li>
+      </ul>
+    </div>
+    <button class="btn" id="btnStart">开始测试</button>
+  </div>
+
+  <!-- ============ 答题页 ============ -->
+  <div class="page" id="pageQuiz">
+    <div class="quiz-top">
+      <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="counter" id="counter">1 / 14</div>
+    </div>
+    <div class="card quiz-card">
+      <div class="q-index" id="qIndex">Q1</div>
+      <div class="q-text" id="qText"></div>
+      <div id="options"></div>
+      <div class="quiz-actions">
+        <button class="btn prev" id="btnPrev">上一题</button>
+        <button class="btn" id="btnNext">下一题</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 结果页 ============ -->
+  <div class="page" id="pageResult">
+    <div class="card result-hero">
+      <div class="test-name">如果不当护士，你到底适合干嘛？</div>
+      <div class="type-name" id="rTypeName"></div>
+      <div class="match-wrap">
+        <svg width="132" height="132" viewBox="0 0 132 132">
+          <circle cx="66" cy="66" r="56" fill="none" stroke="#e9edf7" stroke-width="10"/>
+          <circle id="matchCircle" cx="66" cy="66" r="56" fill="none" stroke="#5b8def" stroke-width="10" stroke-linecap="round" stroke-dasharray="351.8" stroke-dashoffset="351.8" style="transition: stroke-dashoffset 1s ease"/>
+        </svg>
+        <div class="match-num"><b id="rMatchNum">0%</b><span>匹配度</span></div>
+      </div>
+      <div class="tagline" id="rTagline"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">核心分析</div>
+      <div class="analysis-grid">
+        <div class="ana-item"><div class="k">你的核心职业倾向</div><div class="v" id="rCore"></div></div>
+        <div class="ana-item"><div class="k">护理工作里最消耗你的点</div><div class="v" id="rDrain"></div></div>
+        <div class="ana-item"><div class="k">你更适合的工作特征</div><div class="v" id="rFeatures"></div></div>
+        <div class="ana-item"><div class="k">你真正需要的工作状态</div><div class="v" id="rState"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">推荐方向</div>
+      <div class="career-list" id="rCareers"></div>
+      <p style="font-size:13px;color:var(--sub);margin-top:14px" id="rWhy"></p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">行动建议</div>
+      <div class="timeline">
+        <div class="tl-item"><div class="k">未来 7 天可以做什么</div><div class="v" id="rDay7"></div></div>
+        <div class="tl-item"><div class="k">未来 30 天可以做什么</div><div class="v" id="rDay30"></div></div>
+        <div class="tl-item"><div class="k">最值得优先尝试的一步</div><div class="v" id="rPriority"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">为什么你不适合继续走传统护理路径</div>
+      <p style="font-size:14.5px;color:#444b5c" id="rWhyDetail"></p>
+      <div class="sec-title" style="margin-top:20px">你的护理背景如何成为优势</div>
+      <p style="font-size:14.5px;color:#444b5c" id="rAdvantage"></p>
+      <p class="ending" id="rEnding"></p>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn" id="btnShare">一键生成分享图</button>
+      <button class="btn ghost" id="btnRetest">再测一次</button>
+    </div>
+    <div class="foot-note">分享图底部含品牌水印：人生实验室</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 数据 ================= */
+var TYPES = {
+  '体验创造者': {
+    accent: '#5b8def',
+    tagline: '把「苦」变成「美」的人。',
+    core: '对体验和感受极其敏锐，善于发现环境、流程、产品里让人不舒服的细节。',
+    drain: '看到问题却无力改变，热情被"无能为力"一点点磨光。',
+    features: '审美感知力 · 细节洞察 · 共情能力 · 动手改造',
+    state: '有空间把自己发现的问题亲手改好，让创意真正落地。',
+    why: '你消耗的不是体力，是"无能为力"。当你明明看到流程、环境、体验可以更好，却因为制度惯性改不动时，热情会被磨光。传统护理路径很难给你"亲手改造体验"的空间。',
+    careers: [
+      { name: 'UI/UX 设计', note: '把你对体验的敏感，变成产品的语言' },
+      { name: '产品体验设计 / 服务设计', note: '从流程到服务，让体验成为竞争力' },
+      { name: '医疗空间与患者体验优化', note: '让就医这件事，少一点恐惧' }
+    ],
+    advantage: '你比大多数设计师更懂"真实用户"——你见过最脆弱的用户、最紧急的场景、最真实的情绪。做医疗体验设计时，你画的每个界面、设计的每条动线，都自带临床一线的说服力。',
+    day7: '打开 Figma 免费版，把你最熟悉的"护士站交接班流程"重新设计一版更顺滑的体验图，直接发到社交平台。',
+    day30: '完成一个小型 UI/UX 入门课程，产出 2～3 个作品集案例，重点打磨一个医疗方向的作品。',
+    priority: '先做出第一版体验图，建立"我能改造体验"的信心。',
+    ending: '世界很粗糙，等你来把它变好看。',
+    encourage: '你总觉得是自己在适应世界，其实你是那个能把世界变得更好用一点的人。'
+  },
+  '产品策划者': {
+    accent: '#8b5cf6',
+    tagline: '把想法变成产品的人。',
+    core: '习惯把复杂问题拆解成可执行的计划，永远在追问"怎么做更好"。',
+    drain: '改进建议总是石沉大海，"只执行不创造"的重复感最让你窒息。',
+    features: '逻辑拆解 · 目标导向 · 流程优化 · 推动执行',
+    state: '有决策权和资源，能把想法真正落地成产品。',
+    why: '传统护理路径的上升通道相对固定，而你要的是"创造和推动"。当你的改进建议总是停在"上报了，没下文"时，你会觉得自己的脑子被浪费了。',
+    careers: [
+      { name: '产品经理（医疗健康 / 互联网）', note: '把临床痛点，变成产品需求' },
+      { name: '医疗 AI 产品经理 / 医疗信息化', note: '站在技术与临床的交叉口' },
+      { name: '项目策划 / 运营策划', note: '把想法拆成可落地的路径' }
+    ],
+    advantage: '你带着真实临床场景去谈需求，不需要编用户故事——每个需求你都亲眼见过。医疗产品最贵的就是"懂业务的人"，而你不仅懂业务，还懂业务里的人。',
+    day7: '选一个你在临床吐槽最多的问题（排班系统、护理记录系统等），写成一页纸的产品改进方案：痛点、用户、方案、价值。',
+    day30: '系统学习产品经理基础框架（需求文档、竞品分析、用户画像），把方案完善成作品集。',
+    priority: '把方案发给至少 3 个业内人求反馈，让真实声音修正你的方向。',
+    ending: '你不需要等机会，你就是那个制造机会的人。',
+    encourage: '你不是只会执行的人，你是那个总在问"为什么不能更好"的人——这恰恰是产品世界最稀缺的物种。'
+  },
+  '内容表达者': {
+    accent: '#f59e0b',
+    tagline: '把经历变成故事的人。',
+    core: '有表达欲和故事感，能把专业经验转化为有人味、有画面感的内容。',
+    drain: '价值不被看见，满肚子的故事和洞察只能烂在值班室。',
+    features: '写作叙事 · 共情能力 · 网感 · 把专业讲成人话',
+    state: '有属于自己的表达阵地，被听见、被回应。',
+    why: '最消耗你的不是累，是"不被看见"。你付出很多，却被当成理所当然；你的委屈和洞察，只能烂在值班室里。传统护理路径给不了你表达的舞台。',
+    careers: [
+      { name: '新媒体运营 / 自媒体', note: '你的故事就是最稀缺的选题库' },
+      { name: '医学科普作者 / 健康内容策划', note: '让专业内容既有专业也有人味' },
+      { name: '品牌内容 / 文案策划', note: '把医疗语言翻译成"人话"' }
+    ],
+    advantage: '现在医疗健康内容最缺的不是专业，是"人味"。你既是专业人士又是亲历者，你写的每句话都有画面感和可信度。真实，是内容行业最贵的货币。',
+    day7: '写一篇 300 字的小红书笔记，标题就叫《护士夜班遇见的第 100 个故事》或任何你记忆最深的片段，不追求完美，先发出去。',
+    day30: '保持每周 2～3 篇输出，测试不同选题的反馈，找到自己的内容方向。',
+    priority: '今天发出第一篇，完成从 0 到 1 的跨越。',
+    ending: '你的故事值得被更多人听见。',
+    encourage: '你的故事不是没人听，是你还没开口讲。这个世界比你想象的更需要真实的声音。'
+  },
+  '研究分析者': {
+    accent: '#10b981',
+    tagline: '把疑问变成答案的人。',
+    core: '凡事要弄明白：耐心、细致、重证据，享受把复杂问题研究清楚。',
+    drain: '疑问得不到答案，好奇心在"只执行不探究"里被搁置。',
+    features: '严谨细致 · 数据敏感 · 流程规范 · 钻研精神',
+    state: '有足够时间深挖问题、验证假设，让专业判断成为工作本身。',
+    why: '临床护理需要你"快、准、稳"，但很少需要你"为什么"。你的疑问在临床往往得不到答案。你不是不适合医疗，是不适合"只执行不探究"的角色。',
+    careers: [
+      { name: '临床研究监查员 CRA / CRC', note: '临床经验直接变现的最近路径' },
+      { name: '医学事务 / 医学信息专员', note: '让专业判断成为你的工作' },
+      { name: '数据分析 / 医疗数据专员', note: '把临床记录变成决策依据' }
+    ],
+    advantage: '你懂临床、懂流程、懂数据怎么来——这正是临床研究行业最稀缺的复合背景。你就是那个自带临床透视眼的人。',
+    day7: '搜你所在城市的 CRA / CRC 岗位要求，把简历里"临床护理"部分改写成"临床研究相关能力"的表述（病例管理、医嘱执行、数据记录、患者沟通）。',
+    day30: '报名 GCP / 临床研究相关培训，补充行业认知与证书储备。',
+    priority: '完成简历改写，并投出第一份简历。',
+    ending: '答案就在你好奇的地方等你。',
+    encourage: '你的较真不是毛病，是天赋。世界需要有人把"大概是这样"变成"确定是这样"。'
+  },
+  '资源连接者': {
+    accent: '#f43f5e',
+    tagline: '把人脉变成机会的人。',
+    core: '对人敏感、擅长沟通协调，天生的资源枢纽和关系润滑剂。',
+    drain: '被困在执行岗，连接人、撬动资源的能力无处发挥。',
+    features: '沟通谈判 · 关系经营 · 资源整合 · 抗压',
+    state: '在人与人、资源与资源的碰撞中创造价值。',
+    why: '你的能量在"人和人之间"流动，而临床护理更多是"人和任务"的关系。你擅长撬动资源、促成合作，却在护士站里被压缩成执行者。',
+    careers: [
+      { name: '医药代表 / 医疗器械销售 / BD', note: '专业背书 + 沟通天赋的组合拳' },
+      { name: '医疗健康行业销售 / 渠道拓展', note: '把资源和需求精准对接' },
+      { name: '医疗社群运营 / 资源对接岗', note: '把人脉盘活成影响力' }
+    ],
+    advantage: '你做销售最大的筹码是"专业可信"——你懂产品在真实场景里的用法，你见过医生真正的痛点。别人卖产品靠话术，你靠的是"我真的懂你们科室需要什么"。',
+    day7: '列出通讯录里 10 个医疗行业的人（前同事、医药代表、器械厂商、医生），约其中 3 个喝杯咖啡或打个电话，问"护士转行过来能做什么"。',
+    day30: '整理你的人脉地图，锁定 1～2 个可尝试的销售 / BD 方向机会。',
+    priority: '完成第一次行业对话——聊完 3 个人，你的路会清晰一半。',
+    ending: '你的人脉不是通讯录，是你的未来。',
+    encourage: '你不是话多，你是天生能把人聚起来。这个世界的本质就是连接，而你早就是连接的高手了。'
+  },
+  '稳定规划者': {
+    accent: '#64748b',
+    tagline: '把日子过成确定的人。',
+    core: '追求确定性，执行力强、守得住、耐得烦，是组织的压舱石。',
+    drain: '临床的不确定性（排班说变就变、付出回报失衡）持续消耗你的安全感。',
+    features: '规则感 · 执行力 · 文档规范 · 长期主义',
+    state: '在清晰稳定的轨道上稳步积累，每一步都看得见。',
+    why: '你要的是"确定性"，而临床恰恰是最不确定的职业之一：排班说变就变、突发状况说来就来、付出和回报长期不成正比。你不是不能吃苦，是不想吃"没有方向感的苦"。',
+    careers: [
+      { name: '考编 / 事业单位', note: '确定性最高的安稳路径' },
+      { name: '医院行政 / 医务科 / 病案管理', note: '用临床经验换管理视角' },
+      { name: '医保 / 保险核赔 / 健康内勤', note: '规则清晰、流程明确' }
+    ],
+    advantage: '你的护理背景在体制内是加分项：懂临床、懂流程、懂规范，很多行政岗位巴不得要一个"能看懂病历"的人。你带着专业入场，起点就不一样。',
+    day7: '打开所在省市"事业单位招聘网"，搜"护理 / 卫生 / 医务"关键词，收藏 5 个符合条件的岗位，研究近三年进面分数。',
+    day30: '锁定 1～2 个目标岗位，制定备考 / 求职计划，进入系统准备。',
+    priority: '确定目标岗位清单——先看清路，再决定怎么走。',
+    ending: '稳稳的幸福，也值得认真规划。',
+    encourage: '追求稳定不是认输，是聪明的战略。你要的不是逃离，是一个配得上你的努力的地方。'
+  },
+  '健康服务者': {
+    accent: '#14b8a6',
+    tagline: '把陪伴变成治愈的人。',
+    core: '共情力强，享受"人被照顾好"的瞬间，专业与温度兼具。',
+    drain: '情感单向输出：给出很多关心，得到的支持却很少，温柔被超负荷消耗。',
+    features: '共情 · 耐心 · 健康专业 · 陪伴感',
+    state: '在一个能好好帮助人的环境里，持续输出温度而不被耗尽。',
+    why: '护理行业最透支你的不是技术，是"情感单向输出"。你适合帮助人，但你需要一个能让你"好好帮人"的环境，而不是在超负荷里消耗自己的温柔。',
+    careers: [
+      { name: '健康管理师 / 慢病管理', note: '把护理技能迁移到院外场景' },
+      { name: '康复 / 养老机构健康管理', note: '让专业和温度都有处安放' },
+      { name: '心理陪伴 / 情绪疏导辅助', note: '你的共情力就是职业能力' }
+    ],
+    advantage: '健康管理行业最缺"既懂专业又会沟通"的人——你恰好两个都占。你能听懂医嘱、看懂报告、讲得清人话，还能让人愿意听你的。"专业+温度"是你最值钱的配置。',
+    day7: '找一家当地健康管理公司或高端养老机构，以"参观 / 交流"名义去聊一次，问"护理背景的人在这里能做什么"。',
+    day30: '了解健康管理师 / 相关证书的报考要求，评估自己的时间与投入。',
+    priority: '完成第一次实地探访——一次真实的探访，胜过一百次想象。',
+    ending: '你的温柔，值得被这个世界好好对待。',
+    encourage: '你不是软弱，你只是温柔。而温柔在这个世界里，是比坚强更稀缺的力量。'
+  },
+  '技术探索者': {
+    accent: '#3b82f6',
+    tagline: '把工具变成翅膀的人。',
+    core: '学习力强、对工具敏感，天然相信技术能改变效率，享受"弄懂并教会别人"。',
+    drain: '只能用工具、不能改造工具的受限感，好奇心无处安放。',
+    features: '逻辑思维 · 自学能力 · 工具敏感 · 教学分享',
+    state: '在"研究工具—创造工具"的循环里持续进化。',
+    why: '临床给你工具，却不给你"改造工具"的权利。你的好奇心在"这个东西为什么这样设计、还能怎么改"上，而临床只需要你"会用"。',
+    careers: [
+      { name: '数字健康 / 医疗信息化实施顾问', note: '用技术思维升级医疗场景' },
+      { name: '数据分析 / AI 数据管理', note: '把临床洞察变成数据洞察' },
+      { name: '医疗软件培训师 / 工具产品运营', note: '把新工具讲得人人都懂' }
+    ],
+    advantage: '医疗行业数字化转型最大的痛点是"懂技术的人不懂临床，懂临床的人不懂技术"——而你站在交叉点上。这种"临床+技术"的双语能力，正在被抢着要。',
+    day7: '选一个常用的医疗 / 健康类 App 拆解它：解决什么痛点、哪里好用、哪里难用、你会怎么改，写成 500 字体验报告发到网上。',
+    day30: '选定一门数据分析 / 技术入门课，完成第一个学习模块并输出笔记。',
+    priority: '发布第一份产品拆解报告——既是练手，也是转行作品。',
+    ending: '你不是要逃离医疗，你是要升级医疗。',
+    encourage: '你总觉得自己只是个护士，其实你只是还没发现，你手里一直握着通往未来的那把钥匙。'
+  }
+};
+
+var QUESTIONS = [
+  { q: '如果有一天你可以重新选择工作节奏，你更想要？', opts: [
+    { t: '弹性安排，能自己掌控节奏，不想被死板的时间框住', type: '体验创造者' },
+    { t: '忙一点没关系，但要有明确目标，像做项目一样推进', type: '产品策划者' },
+    { t: '按部就班，规则清晰，最怕临时变卦', type: '稳定规划者' },
+    { t: '独立专注，最好能有一段不被打扰的深度工作时间', type: '研究分析者' }
+  ]},
+  { q: '给你一整天完全自由的时间，你会选？', opts: [
+    { t: '逛展、拍照，研究那些好看又好用的东西', type: '体验创造者' },
+    { t: '构思一个新点子，把它落成一份可执行的计划', type: '产品策划者' },
+    { t: '写点东西、拍个视频，把生活记录下来', type: '内容表达者' },
+    { t: '安静研究一个感兴趣的课题，查资料查到停不下来', type: '研究分析者' }
+  ]},
+  { q: '听到"铁饭碗"这三个字，你的第一反应是？', opts: [
+    { t: '安心，稳定比什么都重要', type: '稳定规划者' },
+    { t: '有点无聊，我更想折腾点新东西', type: '技术探索者' },
+    { t: '羡慕，但不想被框死一辈子，想看看外面的世界', type: '资源连接者' },
+    { t: '想拥有，但更希望手里有随时离开的底气', type: '内容表达者' }
+  ]},
+  { q: '下夜班之后，你通常更想？', opts: [
+    { t: '一个人安静待着，谁也别跟我说话', type: '研究分析者' },
+    { t: '把今天遇到的事写下来，或者讲给朋友听', type: '内容表达者' },
+    { t: '约人逛街运动，用身体的疲惫盖过心里的累', type: '健康服务者' },
+    { t: '复盘今天的流程，琢磨哪里还能更顺', type: '技术探索者' }
+  ]},
+  { q: '病房突发抢救时，你通常的状态是？', opts: [
+    { t: '先稳住病人和家属的情绪，把场面撑住', type: '健康服务者' },
+    { t: '快速判断，按流程执行，事后默默复盘', type: '研究分析者' },
+    { t: '紧张但能顶住，事后要缓很久才能平复', type: '体验创造者' },
+    { t: '观察全场，看谁需要支援，帮忙协调人手', type: '资源连接者' }
+  ]},
+  { q: '护理工作里，最消耗你的是？', opts: [
+    { t: '日复一日的重复，看不到成长和变化', type: '产品策划者' },
+    { t: '复杂的人际关系和沟通成本', type: '资源连接者' },
+    { t: '价值不被看见，努力被当成理所当然', type: '内容表达者' },
+    { t: '体力透支，身体真的吃不消', type: '健康服务者' }
+  ]},
+  { q: '关于收入，你最看重的是？', opts: [
+    { t: '稳定可预期，别忽高忽低', type: '稳定规划者' },
+    { t: '多劳多得，付出能直接看到回报', type: '资源连接者' },
+    { t: '天花板要高，愿意为此拼一把', type: '产品策划者' },
+    { t: '够用就行，更想要生活和工作的平衡', type: '体验创造者' }
+  ]},
+  { q: '想象五年后的自己，你最理想的画面是？', opts: [
+    { t: '做出一个让人眼前一亮的产品或作品', type: '体验创造者' },
+    { t: '带一个团队或项目，有自己的影响力', type: '产品策划者' },
+    { t: '成为某个领域的专家，说话有分量', type: '研究分析者' },
+    { t: '有一群志同道合的伙伴，一起把事做成', type: '资源连接者' }
+  ]},
+  { q: '如果重新选择工作方式，你会选？', opts: [
+    { t: '有人把一切都安排好，我负责执行到位', type: '稳定规划者' },
+    { t: '目标明确，具体怎么做自己说了算', type: '技术探索者' },
+    { t: '团队协作，大家一起把一件事做成', type: '资源连接者' },
+    { t: '完全自主，自己安排一切，当自己的老板', type: '内容表达者' }
+  ]},
+  { q: '现在提到"医院"两个字，你的感受是？', opts: [
+    { t: '五味杂陈，又想逃离，又有点舍不得', type: '体验创造者' },
+    { t: '熟悉到闭着眼都能走，想换个角色留在医疗圈', type: '研究分析者' },
+    { t: '舍不得病人和同事，但受不了这份辛苦', type: '健康服务者' },
+    { t: '生理性疲惫，只想找个不熬夜的地方', type: '稳定规划者' }
+  ]},
+  { q: '写护理记录、处理一堆表格数据时，你通常是？', opts: [
+    { t: '追求准确，格式必须规范，强迫症发作', type: '研究分析者' },
+    { t: '边写边吐槽系统难用，觉得一定有更好的工具', type: '技术探索者' },
+    { t: '耐心细致，享受把乱糟糟的东西整理清楚', type: '稳定规划者' },
+    { t: '一边做一边想怎么让这套流程更高效', type: '产品策划者' }
+  ]},
+  { q: '科室要做健康宣教或科普材料，你的态度是？', opts: [
+    { t: '跃跃欲试，想亲手做出好看又好懂的内容', type: '体验创造者' },
+    { t: '很乐意，喜欢和病人面对面讲清楚', type: '健康服务者' },
+    { t: '愿意写，而且想写得专业又有温度', type: '内容表达者' },
+    { t: '觉得现有材料太死板，想用新形式重做', type: '技术探索者' }
+  ]},
+  { q: '面对新仪器、新系统，你通常是？', opts: [
+    { t: '抗拒，又要重新学，烦死了', type: '稳定规划者' },
+    { t: '好奇，想搞懂它的原理和用法', type: '研究分析者' },
+    { t: '上手很快，还能教别人怎么用', type: '技术探索者' },
+    { t: '会想：这工具能不能让病人少受点罪', type: '健康服务者' }
+  ]},
+  { q: '如果明天就离开临床，你最可能先做的是？', opts: [
+    { t: '先好好休息一阵，想想自己到底要什么', type: '健康服务者' },
+    { t: '马上搜集转行信息，给自己列个计划', type: '产品策划者' },
+    { t: '报个课、学个技能，先给自己充电', type: '技术探索者' },
+    { t: '找朋友和前辈聊聊，听听别人的路', type: '资源连接者' }
+  ]}
+];
+
+/* ================= 状态 ================= */
+var answers = new Array(QUESTIONS.length).fill(null);
+var current = 0;
+var resultType = null;
+var resultPercent = 0;
+
+/* 各类型出现次数 M */
+function countAppearances() {
+  var m = {};
+  QUESTIONS.forEach(function (item) {
+    item.opts.forEach(function (o) { m[o.type] = (m[o.type] || 0) + 1; });
+  });
+  return m;
+}
+var APPEAR = countAppearances();
+
+/* ================= 页面切换 ================= */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(function () { el.classList.remove('show'); }, 2200);
+}
+
+/* ================= 答题 ================= */
+document.getElementById('btnStart').addEventListener('click', function () {
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  showPage('pageQuiz');
+  renderQuestion();
+});
+
+function renderQuestion() {
+  var item = QUESTIONS[current];
+  document.getElementById('qIndex').textContent = 'Q' + (current + 1);
+  document.getElementById('qText').textContent = item.q;
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progressBar').style.width = ((current + 1) / QUESTIONS.length * 100) + '%';
+  document.getElementById('btnPrev').style.visibility = current === 0 ? 'hidden' : 'visible';
+  document.getElementById('btnNext').textContent = current === QUESTIONS.length - 1 ? '查看结果' : '下一题';
+
+  var box = document.getElementById('options');
+  box.innerHTML = '';
+  item.opts.forEach(function (o, i) {
+    var b = document.createElement('button');
+    b.className = 'option';
+    b.textContent = String.fromCharCode(65 + i) + '. ' + o.t;
+    if (answers[current] === i) b.classList.add('selected');
+    b.addEventListener('click', function () {
+      answers[current] = i;
+      box.querySelectorAll('.option').forEach(function (x) { x.classList.remove('selected'); });
+      b.classList.add('selected');
+    });
+    box.appendChild(b);
+  });
+}
+
+document.getElementById('btnPrev').addEventListener('click', function () {
+  if (current > 0) { current--; renderQuestion(); }
+});
+
+document.getElementById('btnNext').addEventListener('click', function () {
+  if (answers[current] === null) { toast('选一个再继续哦'); return; }
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion();
+  } else {
+    computeResult();
+  }
+});
+
+/* ================= 结果计算 ================= */
+function computeResult() {
+  var score = {};
+  QUESTIONS.forEach(function (item, idx) {
+    var o = item.opts[answers[idx]];
+    score[o.type] = (score[o.type] || 0) + 1;
+  });
+  var best = null, bestScore = -1;
+  Object.keys(score).forEach(function (k) {
+    if (score[k] > bestScore) { bestScore = score[k]; best = k; }
+    else if (score[k] === bestScore) {
+      // 并列：取出现次数更多者；仍并列取对象顺序靠前者
+      if (APPEAR[k] > APPEAR[best]) best = k;
+    }
+  });
+  var ratio = bestScore / APPEAR[best];
+  resultPercent = Math.round(70 + ratio * 28);
+  if (resultPercent > 98) resultPercent = 98;
+  if (resultPercent < 70) resultPercent = 70;
+  resultType = best;
+  renderResult();
+}
+
+/* ================= 结果页渲染 ================= */
+function renderResult() {
+  var d = TYPES[resultType];
+  document.getElementById('rTypeName').textContent = resultType;
+  document.getElementById('rTagline').textContent = d.tagline;
+  document.getElementById('rCore').textContent = d.core;
+  document.getElementById('rDrain').textContent = d.drain;
+  document.getElementById('rFeatures').textContent = d.features;
+  document.getElementById('rState').textContent = d.state;
+  document.getElementById('rWhy').textContent = '为什么是你？' + d.why;
+  document.getElementById('rWhyDetail').textContent = d.why;
+  document.getElementById('rAdvantage').textContent = d.advantage;
+  document.getElementById('rDay7').textContent = d.day7;
+  document.getElementById('rDay30').textContent = d.day30;
+  document.getElementById('rPriority').textContent = d.priority;
+  document.getElementById('rEnding').textContent = d.ending;
+
+  var box = document.getElementById('rCareers');
+  box.innerHTML = '';
+  d.careers.forEach(function (c, i) {
+    var div = document.createElement('div');
+    div.className = 'career-item';
+    div.innerHTML = '<div class="rank ' + (i === 1 ? 'r2' : i === 2 ? 'r3' : '') + '">TOP' + (i + 1) + '</div>' +
+      '<div><div class="c-name">' + c.name + '</div><div class="c-note">' + c.note + '</div></div>';
+    box.appendChild(div);
+  });
+
+  // 匹配度动画
+  document.getElementById('rMatchNum').textContent = '0%';
+  var circle = document.getElementById('matchCircle');
+  var C = 2 * Math.PI * 56;
+  circle.style.strokeDasharray = C;
+  circle.style.strokeDashoffset = C;
+  showPage('pageResult');
+  setTimeout(function () {
+    var num = document.getElementById('rMatchNum');
+    var t = 0;
+    var timer = setInterval(function () {
+      t += 2;
+      if (t >= resultPercent) { t = resultPercent; clearInterval(timer); }
+      num.textContent = t + '%';
+      circle.style.strokeDashoffset = C * (1 - t / 100);
+    }, 16);
+  }, 60);
+}
+
+document.getElementById('btnRetest').addEventListener('click', function () {
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  showPage('pageQuiz');
+  renderQuestion();
+});
+
+/* ================= 分享图生成（原生 Canvas） ================= */
+document.getElementById('btnShare').addEventListener('click', function () {
+  try {
+    var canvas = drawShareCard();
+    downloadCanvas(canvas, '护理生转行方向测试-' + resultType + '.png');
+    toast('分享图已生成，请查收');
+  } catch (e) {
+    toast('生成失败，请重试');
+  }
+});
+
+function drawShareCard() {
+  var W = 1080, H = 1440;
+  var d = TYPES[resultType];
+  var accent = d.accent;
+  var canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  var ctx = canvas.getContext('2d');
+
+  // 背景
+  var g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#ffffff');
+  g.addColorStop(1, '#f3f6fc');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+
+  // 顶部标题
+  ctx.fillStyle = '#9aa3b8';
+  ctx.font = 'bold 34px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('护理生转行方向测试', W / 2, 130);
+
+  // 结果名
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 88px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(resultType, W / 2, 240);
+
+  // 标签
+  ctx.fillStyle = '#5b6270';
+  ctx.font = '400 40px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(d.tagline.replace(/。/g, ''), W / 2, 305);
+
+  // 分隔线
+  ctx.strokeStyle = '#e6ebf5';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(120, 360);
+  ctx.lineTo(W - 120, 360);
+  ctx.stroke();
+
+  // 解析（最多4行）
+  ctx.fillStyle = '#3a4152';
+  ctx.font = '36px "PingFang SC","Microsoft YaHei",sans-serif';
+  var lines = wrapText(ctx, d.core, 860);
+  if (lines.length > 4) lines = lines.slice(0, 4);
+  var y = 420;
+  lines.forEach(function (ln) {
+    ctx.fillText(ln, W / 2, y);
+    y += 52;
+  });
+
+  // 推荐方向
+  y += 30;
+  ctx.fillStyle = '#9aa3b8';
+  ctx.font = 'bold 32px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('—— 推荐转行方向 ——', W / 2, y);
+  y += 64;
+  ctx.font = '400 40px "PingFang SC","Microsoft YaHei",sans-serif';
+  d.careers.forEach(function (c) {
+    ctx.fillStyle = '#2b2f3a';
+    ctx.fillText('· ' + c.name, W / 2, y);
+    y += 64;
+  });
+
+  // 匹配度
+  y += 40;
+  var gy = ctx.createLinearGradient(W / 2 - 220, 0, W / 2 + 220, 0);
+  gy.addColorStop(0, accent);
+  gy.addColorStop(1, '#a78bfa');
+  ctx.fillStyle = gy;
+  ctx.font = 'bold 120px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText(resultPercent + '%', W / 2, y + 60);
+  ctx.fillStyle = '#9aa3b8';
+  ctx.font = '400 34px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('与「' + resultType + '」匹配度', W / 2, y + 110);
+
+  // 底部引导语
+  ctx.fillStyle = '#5b6270';
+  ctx.font = '400 38px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('你也来测测：如果不当护士，你适合干嘛？', W / 2, 1330);
+
+  // 水印
+  ctx.fillStyle = 'rgba(120,130,155,0.55)';
+  ctx.font = 'bold 30px "PingFang SC","Microsoft YaHei",sans-serif';
+  ctx.fillText('人生实验室', W / 2, 1395);
+
+  return canvas;
+}
+
+function wrapText(ctx, text, maxWidth) {
+  var chars = text.split('');
+  var lines = [], line = '';
+  for (var i = 0; i < chars.length; i++) {
+    if (ctx.measureText(line + chars[i]).width > maxWidth) {
+      lines.push(line);
+      line = chars[i];
+    } else {
+      line += chars[i];
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+function downloadCanvas(canvas, filename) {
+  var link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
+</body>
+</html>
